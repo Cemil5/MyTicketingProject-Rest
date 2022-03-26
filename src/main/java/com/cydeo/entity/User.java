@@ -23,6 +23,7 @@ public class User extends BaseEntity {
     private String passWord;
     private boolean enabled;
     private String phone;
+    private String email;
 
   //  @ManyToOne(fetch = FetchType.LAZY)    // security doesn't work with lazy
     @ManyToOne()

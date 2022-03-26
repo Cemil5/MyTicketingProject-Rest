@@ -1,0 +1,65 @@
+#server:
+#  port: 8080
+#spring:
+#  application:
+#    name: spring-rest-security
+#  profiles:
+#    active: default
+##    we can define different profiles for test env. etc.
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/api_db
+#    username: postgres
+#    password: postgres
+#    driver-class-name: org.postgresql.Driver
+##depriciated    initialization-mode: always
+##depriciated    data: classpath:data.sql
+#  jpa:
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
+#        ddl-auto: create
+#      show-sql: true
+#    defer-datasource-initialization: true
+#  sql:
+#    init:
+#      mode: always
+#      data-locations: classpath:data.sql
+#security:
+#  jwt:
+#    secret-key: cydeo
+#springdoc:
+#  swagger-ui:
+#    path: /swagger-ui.html
+server:
+  port: 8080
+spring:
+  application:
+    name: ticketing-project-rest-security
+  profiles:
+    active: default
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ticketing
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+#    initialization-mode: always
+#    data: classpath:data.sql
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+security:
+  jwt:
+    secret-key: cydeo
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+
+# can be removed
+# converter / templates
+
+

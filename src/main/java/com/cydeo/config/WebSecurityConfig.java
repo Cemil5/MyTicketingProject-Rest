@@ -11,9 +11,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private SecurityService securityService;
+    // UI security part
+   /* private SecurityService securityService;
     private AuthSuccessHandler authSuccessHandler;
 
     @Override
@@ -44,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .tokenValiditySeconds(120) // most app don't have this, so you can stay logged in after clicking remember me
                     .key("cydeoSecret")
                     .userDetailsService(securityService);   // remembers specific user.
-    }
+    }*/
 
     /*  @Override
     protected void configure(HttpSecurity http) throws Exception {
