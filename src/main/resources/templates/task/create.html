@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="/fragments/head :: header"><title>Task Create</title></head>
+
+<body>
+
+<div class="dashboard-main-wrapper">
+
+    <div th:replace="/fragments/header :: header"></div>
+
+    <div th:replace="/fragments/left-sidebar :: left-sidebar"></div>
+
+    <div class="dashboard-wrapper">
+
+        <div class="dashboard-ecommerce">
+
+            <div class="container-fluid dashboard-content">
+
+                <div class="ecommerce-widget">
+
+                    <div class="row">
+
+                        <div class="col-lg-6 col-md-12">
+
+                            <section class="panel panel-transparent">
+                                <header class="panel-heading">
+                                    <h2 class="panel-title">Task Assign</h2>
+                                </header>
+
+                                <div class="panel-body">
+
+                                    <!-- ------------------------FORM START----------------------------- -->
+                                    <form th:object="${task}" th:action="@{/task/create}" method="post" class="needs-validation" novalidate >
+
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label>Project
+                                                    <select th:field = "*{project}" class="custom-select" required="required">
+                                                        <option th:text="Select" th:value="''"></option>
+                                                        <option th:each="pr : ${projects}" th:value="${pr.projectCode}"
+                                                                th:text="${pr.projectCode + ' ' +pr.projectName}"></option>
+                                                    </select>
+                                                    <div class="invalid-feedback">Please choose project</div>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label>Assigned Employee
+                                                    <select th:field = "*{assignedEmployee}" class="custom-select" required="required">
+                                                        <option th:text="Select" th:value="''"></option>
+                                                        <option th:each="emp : ${employees}" th:value="${emp.userName}"
+                                                                th:text="${emp.firstName + ' ' +emp.lastName}"></option>
+                                                    </select>
+                                                    <div class="invalid-feedback">Please choose employee</div>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label class="col-form-label">Task Subject
+                                                    <input th:field = "*{taskSubject}" type="text" placeholder="task subject" class="form-control" required>
+                                                    <div class="invalid-feedback">Please enter task subject.</div>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label>Task Detail
+                                                    <textarea th:field = "*{taskDetail}" class="form-control" required></textarea>
+                                                    <div class="invalid-feedback">Please enter task detail</div>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="float-right">
+                                                    <button class="btn btn-success rounded-0" type="submit">Save</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </form>
+                                    <!-- ------------------------FORM END----------------------------- -->
+
+                                </div>
+
+                            </section>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ------------------------TABLE START----------------------------- -->
+
+                <div class="row">
+                    <div class="col-lg-12 col-md-12">
+                        <div class="col-md-12">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                    <h2 class="panel-title">Tasks List</h2>
+                                </header>
+                                <div class="panel-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">Project Name</th>
+                                                <th scope="col">Task Subject</th>
+                                                <th scope="col">Assigned Employee</th>
+                                                <th scope="col">Assigned Date</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="task : ${tasks}">
+                                                <td th:text="${task.project.projectCode +' '+task.project.projectName}"></td>
+                                                <td th:text="${task.taskSubject}"></td>
+                                                <td th:text="${task.assignedEmployee.firstName+' '+task.assignedEmployee.lastName}"></td>
+                                                <td th:text="${#temporals.format(task.assignedDate, 'MM/dd/yyyy')}"></td>
+                                                <td th:text="${task.taskStatus.value}"></td>
+                                                <td>
+                                                    <a th:href="@{/task/update/{id}(id=${task.getId})}" class="btn btn-warning rounded-0">Update</a>
+                                                    <a th:href="@{/task/delete/{id}(id=${task.getId})}" class="btn btn-danger rounded-0">Delete</a>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ------------------------TABLE END----------------------------- -->
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div th:replace="/fragments/footer :: footer"></div>
+
+</div>
+
+<div th:replace="/fragments/javascript :: js"></div>
+
+</body>
+
+</html>
