@@ -44,12 +44,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(UserDTO dto) {
-        dto.setEnabled(true);   // isEnabled variable becomes true. checks sign up confirmations by email
+    public UserDTO save(UserDTO dto) throws TicketingProjectException {
+        User foundedUser = userRepository.findByUserName(dto.getUserName());
+        if(foundedUser!=null){
+            throw new TicketingProjectException("This username already exists!");
+        }
+
+        // dto.setEnabled(true);   // isEnabled variable becomes true. checks sign up confirmations by email
 
         User user = mapperUtil.convert(dto, new User());
         user.setPassWord(passwordEncoder.encode(user.getPassWord()));
-        userRepository.save(user);
+        User saved = userRepository.save(user);
+        return mapperUtil.convert(saved, new UserDTO());
     }
 
     @Override

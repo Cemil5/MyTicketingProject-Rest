@@ -1,35 +1,5 @@
-#server:
-#  port: 8080
-#spring:
-#  application:
-#    name: spring-rest-security
-#  profiles:
-#    active: default
-##    we can define different profiles for test env. etc.
-#  datasource:
-#    url: jdbc:postgresql://localhost:5432/api_db
-#    username: postgres
-#    password: postgres
-#    driver-class-name: org.postgresql.Driver
-##depriciated    initialization-mode: always
-##depriciated    data: classpath:data.sql
-#  jpa:
-#    properties:
-#      hibernate:
-#        dialect: org.hibernate.dialect.PostgreSQLDialect
-#        ddl-auto: create
-#      show-sql: true
-#    defer-datasource-initialization: true
-#  sql:
-#    init:
-#      mode: always
-#      data-locations: classpath:data.sql
-#security:
-#  jwt:
-#    secret-key: cydeo
-#springdoc:
-#  swagger-ui:
-#    path: /swagger-ui.html
+app:
+  local-url: http://localhost:${server.port}
 server:
   port: 8080
 spring:
@@ -51,6 +21,23 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: false
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          starttls:
+            enabled: true
+            required: true
+          auth: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+    username: cybertekschool.email@gmail.com
+    password: Cybertekschool@2020
 security:
   jwt:
     secret-key: cydeo

@@ -7,5 +7,5 @@ insert into users(insert_date_time, insert_user_id, is_deleted, last_update_date
 values ('2021-01-05 00:00:00', 1, false, '2021-01-05 00:00:00', 1, true, 'admin', 'MALE', 'admin', 'admin@admin.com',
         1,'$2a$10$nAB5j9G1c3JHgg7qzhiIXO7cqqr5oJ3LXRNQJKssDUwHXzDGUztNK');
 
--- Abc1
+-- Abc1     // admin@admin.com
 -- zskcf5gf974HPeT  // john@cy

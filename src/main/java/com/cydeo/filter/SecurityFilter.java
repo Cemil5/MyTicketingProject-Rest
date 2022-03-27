@@ -1,7 +1,7 @@
-package com.cydeo.service;
+package com.cydeo.filter;
 
 import com.cydeo.entity.User;
-import com.cydeo.enums.UserState;
+import com.cydeo.service.SecurityService;
 import com.cydeo.util.JWTUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -54,6 +54,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     private boolean checkIfUserIsValid(String username) {
         User currentUser = securityService.loadUser(username);
-        return currentUser != null && currentUser.getIsVerified() && currentUser.getState() == UserState.ACTIVE;
+      //  return currentUser != null && currentUser.getIsVerified() && currentUser.getState() == UserState.ACTIVE;
+        return currentUser != null && currentUser.isEnabled();
     }
 }

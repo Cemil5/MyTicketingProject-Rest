@@ -25,9 +25,12 @@ public class BaseEntityListener extends AuditingEntityListener {
         baseEntity.setLastUpdateUserId(1L);
 
         if(authentication != null && !authentication.getName().equals("anonymousUser")){
-            Object principal = authentication.getPrincipal();
-            baseEntity.setInsertUserId(((UserPrincipal) principal).getId());
-            baseEntity.setLastUpdateUserId(((UserPrincipal) principal).getId());
+//            Object principal = authentication.getPrincipal();
+//            baseEntity.setInsertUserId(((UserPrincipal) principal).getId());
+//            baseEntity.setLastUpdateUserId(((UserPrincipal) principal).getId());
+            long id = Long.parseLong(authentication.getName());
+            baseEntity.setInsertUserId(id);
+            baseEntity.setLastUpdateUserId(id);
         }
     }
 
@@ -38,8 +41,10 @@ public class BaseEntityListener extends AuditingEntityListener {
         baseEntity.setLastUpdateUserId(1L);
 
         if(authentication != null && !authentication.getName().equals("anonymousUser")){
-            Object principal = authentication.getPrincipal();
-            baseEntity.setLastUpdateUserId(((UserPrincipal) principal).getId());
+//            Object principal = authentication.getPrincipal();
+//            baseEntity.setLastUpdateUserId(((UserPrincipal) principal).getId());
+            long id = Long.parseLong(authentication.getName());
+            baseEntity.setLastUpdateUserId(id);
         }
     }
 
