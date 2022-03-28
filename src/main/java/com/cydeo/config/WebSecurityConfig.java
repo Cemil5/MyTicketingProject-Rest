@@ -14,7 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
-public class RestSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private SecurityFilter securityFilter;
 
@@ -27,6 +27,7 @@ public class RestSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String[] permittedUrls ={
             "/authenticate",
             "/create-user",
+            "/confirmation",
             "/api/p1/**",
             "/v3/api-docs/**",
             "/swagger-resources/**",

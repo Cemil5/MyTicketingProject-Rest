@@ -22,12 +22,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 //@Controller
 @RestController
-@AllArgsConstructor
-@Tag(name = "Login controller", description = "Authenticate API")
+@Tag(name = "Authentication Controller", description = "Authenticate API")
 public class LoginController {
 
 	@Value("${app.local-url}")
@@ -38,6 +38,14 @@ public class LoginController {
 	private MapperUtil mapperUtil;
 	private JWTUtil jwtUtil;
 	private ConfirmationTokenService confirmationTokenService;
+
+	public LoginController(AuthenticationManager authenticationManager, UserService userService, MapperUtil mapperUtil, JWTUtil jwtUtil, ConfirmationTokenService confirmationTokenService) {
+		this.authenticationManager = authenticationManager;
+		this.userService = userService;
+		this.mapperUtil = mapperUtil;
+		this.jwtUtil = jwtUtil;
+		this.confirmationTokenService = confirmationTokenService;
+	}
 
 	@PostMapping("/authenticate")
 	@DefaultExceptionMessage(defaultMessage = "Bad Credentials")
@@ -66,9 +74,18 @@ public class LoginController {
 		UserDTO createdUser = userService.save(userDTO);
 		sendEmail(createEmail(createdUser));
 
-		return ResponseEntity.ok(new ResponseWrapper("User has been created! \nPlease confirm your email!", createdUser));
+		return ResponseEntity.ok(new ResponseWrapper("User has been created! \n Please confirm your email!", createdUser));
 	}
 
+	@PostMapping("/confirmation")
+	@DefaultExceptionMessage(defaultMessage = "Failed to confirm email, try again!")
+	@Operation(summary = "Confirm account")
+	public ResponseEntity<ResponseWrapper> confirmEmail(@RequestParam("token") String token) throws TicketingProjectException {
+		ConfirmationToken confirmationToken = confirmationTokenService.readByToken(token);
+		UserDTO confirmUser = userService.confirm(confirmationToken.getUser());
+		confirmationTokenService.delete(confirmationToken);
+		return ResponseEntity.ok(new ResponseWrapper("User has been confirmed!", confirmUser));
+	}
 
 	private MailDTO createEmail(UserDTO userDTO){
 
@@ -80,7 +97,7 @@ public class LoginController {
 		return MailDTO.builder().emailTo(user.getUserName())
 				.token(createdConfirmationToken.getToken())
 				.subject("Confirm Registration")
-				.message("To confirm your account, please click here")
+				.message("To confirm your account, please click here: \n")
 				.url(BASE_URL + "/confirmation?token=")
 				.build();
 	}

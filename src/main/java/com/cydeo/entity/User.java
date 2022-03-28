@@ -1,6 +1,8 @@
 package com.cydeo.entity;
 
 import com.cydeo.utils.Gender;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +15,7 @@ import javax.persistence.*;
 @Setter
 @Entity(name = "users")
 @Where(clause = "is_Deleted = false")
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer"}, ignoreUnknown = true)
 public class User extends BaseEntity {
 
     private String firstName;
@@ -20,6 +23,7 @@ public class User extends BaseEntity {
 
     @Column(unique = true, nullable = false)
     private String userName;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String passWord;
     private boolean enabled;
     private String phone;

@@ -36,8 +36,8 @@ spring:
           connectiontimeout: 5000
           timeout: 5000
           writetimeout: 5000
-    username: cybertekschool.email@gmail.com
-    password: Cybertekschool@2020
+    username: willschris483@gmail.com
+    password: Alpa!!357
 security:
   jwt:
     secret-key: cydeo

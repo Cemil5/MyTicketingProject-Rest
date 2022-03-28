@@ -1,6 +1,7 @@
 package com.cydeo.entity;
 
 import com.cydeo.utils.Status;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 @Entity(name = "tasks")
 @Where(clause = "is_Deleted = false")
 @ToString
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer"}, ignoreUnknown = true)
 public class Task extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)

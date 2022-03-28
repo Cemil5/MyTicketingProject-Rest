@@ -112,4 +112,11 @@ public class UserServiceImpl implements UserService {
                 return users.size() > 1;
         }
     }
+
+    @Override
+    public UserDTO confirm(User user) {
+        user.setEnabled(true);
+        User confirmedUser = userRepository.save(user);
+        return mapperUtil.convert(confirmedUser, new UserDTO());
+    }
 }
