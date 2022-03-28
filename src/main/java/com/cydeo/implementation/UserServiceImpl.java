@@ -5,7 +5,7 @@ import com.cydeo.entity.Project;
 import com.cydeo.entity.Task;
 import com.cydeo.entity.User;
 import com.cydeo.exception.TicketingProjectException;
-import com.cydeo.mapper.MapperUtil;
+import com.cydeo.util.MapperUtil;
 import com.cydeo.repository.ProjectRepository;
 import com.cydeo.repository.TaskRepository;
 import com.cydeo.repository.UserRepository;

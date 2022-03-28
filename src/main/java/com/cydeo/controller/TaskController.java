@@ -7,14 +7,12 @@ import com.cydeo.exception.TicketingProjectException;
 import com.cydeo.service.ProjectService;
 import com.cydeo.service.TaskService;
 import com.cydeo.service.UserService;
-import com.cydeo.utils.Status;
+import com.cydeo.enums.Status;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -56,9 +54,50 @@ public class TaskController {
         return ResponseEntity.ok(new ResponseWrapper("Successfully retrieved all tasks by manager", dto));
     }
 
+    @PostMapping()
+    @Operation(summary = "Create a new task")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, please try again!")
+    @PreAuthorize("hasAuthority('Manager')")
+    public ResponseEntity<ResponseWrapper> createTask(@RequestBody TaskDTO dto) throws TicketingProjectException {
+        TaskDTO created = taskService.save(dto);
+        return ResponseEntity.ok(new ResponseWrapper("Successfully task created", created));
+    }
 
+    @PutMapping
+    @Operation(summary = "Update a task by manager")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, please try again!")
+    @PreAuthorize("hasAuthority('Manager')")
+    public ResponseEntity<ResponseWrapper> updateTask(@RequestBody TaskDTO dto) throws TicketingProjectException {
+        TaskDTO updated = taskService.update(dto);
+        return ResponseEntity.ok(new ResponseWrapper("Successfully task created", updated));
+    }
 
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete a task by task code")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, please try again!")
+    @PreAuthorize("hasAuthority('Manager')")
+    public ResponseEntity<ResponseWrapper> deleteTask(@PathVariable Long id) throws TicketingProjectException {
+        taskService.deleteById(id);
+        return ResponseEntity.ok(new ResponseWrapper("Successfully deleted"));
+    }
 
+    @GetMapping("/employee")
+    @Operation(summary = "Read all non complete tasks")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, please try again!")
+    @PreAuthorize("hasAnyAuthority('Employee')")
+    public ResponseEntity<ResponseWrapper> employeeReadAllNonCompletedTask() throws TicketingProjectException {
+        List<TaskDTO> list = taskService.listAllTasksByStatusIsNot(Status.COMPLETE);
+        return ResponseEntity.ok(new ResponseWrapper("Successfully retrieved all non completed current user tasks", list));
+    }
+
+    @PutMapping("/")
+    @Operation(summary = "Update a task by employee")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, please try again!")
+    @PreAuthorize("hasAuthority('Manager')")
+    public ResponseEntity<ResponseWrapper> employeeUpdateTask(@RequestBody TaskDTO dto) throws TicketingProjectException {
+        TaskDTO updated = taskService.updateTaskStatus(dto);
+        return ResponseEntity.ok(new ResponseWrapper("Successfully task created", updated));
+    }
 
 
 

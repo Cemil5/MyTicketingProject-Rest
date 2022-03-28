@@ -1,8 +1,9 @@
-package com.cydeo.mapper;
+package com.cydeo.util;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+// we only need this mapper not others in this package
 @Component
 public class MapperUtil {
 

@@ -1,6 +1,6 @@
 package com.cydeo.dto;
 
-import com.cydeo.utils.Status;
+import com.cydeo.enums.Status;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

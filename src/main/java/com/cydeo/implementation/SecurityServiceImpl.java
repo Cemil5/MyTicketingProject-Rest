@@ -2,9 +2,7 @@ package com.cydeo.implementation;
 
 import com.cydeo.dto.UserDTO;
 import com.cydeo.entity.User;
-import com.cydeo.entity.common.UserPrincipal;
-import com.cydeo.mapper.MapperUtil;
-import com.cydeo.repository.UserRepository;
+import com.cydeo.util.MapperUtil;
 import com.cydeo.service.SecurityService;
 import com.cydeo.service.UserService;
 import lombok.AllArgsConstructor;

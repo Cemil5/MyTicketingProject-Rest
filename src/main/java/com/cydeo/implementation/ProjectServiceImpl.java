@@ -1,19 +1,16 @@
 package com.cydeo.implementation;
 
 import com.cydeo.dto.ProjectDTO;
-import com.cydeo.dto.UserDTO;
 import com.cydeo.entity.Project;
 import com.cydeo.entity.User;
 import com.cydeo.exception.TicketingProjectException;
-import com.cydeo.mapper.MapperUtil;
-import com.cydeo.mapper.ProjectMapper;
-import com.cydeo.mapper.UserMapper;
+import com.cydeo.util.MapperUtil;
 import com.cydeo.repository.ProjectRepository;
 import com.cydeo.repository.UserRepository;
 import com.cydeo.service.ProjectService;
 import com.cydeo.service.TaskService;
 import com.cydeo.service.UserService;
-import com.cydeo.utils.Status;
+import com.cydeo.enums.Status;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;

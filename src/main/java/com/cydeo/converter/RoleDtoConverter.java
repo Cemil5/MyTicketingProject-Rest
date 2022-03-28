@@ -1,6 +1,7 @@
 package com.cydeo.converter;
 
 import com.cydeo.dto.RoleDTO;
+import com.cydeo.exception.TicketingProjectException;
 import com.cydeo.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
@@ -16,7 +17,12 @@ public class RoleDtoConverter implements Converter<String, RoleDTO> {
     @Override
     public RoleDTO convert(String source) {
         Long id = Long.parseLong(source);
-        return roleService.findById(id);
+        try {
+            return roleService.findById(id);
+        } catch (TicketingProjectException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

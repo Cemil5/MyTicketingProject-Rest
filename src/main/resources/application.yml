@@ -46,7 +46,8 @@ springdoc:
     path: /swagger-ui.html
 
 
-# can be removed
-# converter / templates
+# can be removed :
+  # application.properties, static & templates directories
+  # converter / templates
 
 

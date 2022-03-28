@@ -1,23 +1,19 @@
 package com.cydeo.controller;
 
 import com.cydeo.annotation.DefaultExceptionMessage;
-import com.cydeo.dto.MailDTO;
 import com.cydeo.dto.UserDTO;
 import com.cydeo.entity.ConfirmationToken;
 import com.cydeo.entity.ResponseWrapper;
 import com.cydeo.entity.User;
 import com.cydeo.entity.common.AuthenticationRequest;
 import com.cydeo.exception.TicketingProjectException;
-import com.cydeo.mapper.MapperUtil;
+import com.cydeo.util.MapperUtil;
 import com.cydeo.service.ConfirmationTokenService;
 import com.cydeo.service.UserService;
 import com.cydeo.util.JWTUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;

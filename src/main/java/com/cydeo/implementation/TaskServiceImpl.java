@@ -6,23 +6,19 @@ import com.cydeo.entity.Project;
 import com.cydeo.entity.Task;
 import com.cydeo.entity.User;
 import com.cydeo.exception.TicketingProjectException;
-import com.cydeo.mapper.MapperUtil;
-import com.cydeo.mapper.ProjectMapper;
-import com.cydeo.mapper.TaskMapper;
+import com.cydeo.util.MapperUtil;
 import com.cydeo.repository.ProjectRepository;
 import com.cydeo.repository.TaskRepository;
 import com.cydeo.repository.UserRepository;
 import com.cydeo.service.TaskService;
-import com.cydeo.utils.Status;
+import com.cydeo.enums.Status;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.exceptions.TemplateProcessingException;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-import java.util.Timer;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,49 +50,53 @@ public class TaskServiceImpl implements TaskService {
         Task task = mapperUtil.convert(dto, new Task());
         task.setTaskStatus(Status.OPEN);
         task.setAssignedDate(LocalDate.now());
-        //userDTO doesn't have id, and it uses username as a reference. I find user by username
-        User user = userRepository.findByUserName(dto.getAssignedEmployee().getUserName());
-        Project project = projectRepository.findByProjectCode(dto.getProject().getProjectCode());
-        System.out.println(user.getUserName() + " " + user.getFirstName());
-        task.setAssignedEmployee(user);
-        task.setProject(project);
 
-        taskRepository.save(task);
-        return mapperUtil.convert(task, new TaskDTO());
+        //userDTO doesn't have id, and it uses username as a reference. I find user by username
+//        User user = userRepository.findByUserName(dto.getAssignedEmployee().getUserName());
+//        Project project = projectRepository.findByProjectCode(dto.getProject().getProjectCode());
+//        System.out.println(user.getUserName() + " " + user.getFirstName());
+//        task.setAssignedEmployee(user);
+//        task.setProject(project);
+
+        Task saved = taskRepository.save(task);
+        return mapperUtil.convert(saved, new TaskDTO());
       //  return taskMapper.convertToDto(taskRepository.findById(dto.getTaskId()).get());
     }
 
     @Override
     public void deleteById(Long id) {
-        Optional<Task> task = taskRepository.findById(id);
-        if (task.isPresent()) {
-            task.get().setIsDeleted(true);
-            taskRepository.save(task.get());
-        }
+        Task task = taskRepository.findById(id).orElseThrow(()-> new TemplateProcessingException("Task does not exist"));
+        task.setIsDeleted(true);
+        taskRepository.save(task);
+//        Optional<Task> task = taskRepository.findById(id);
+//        if (task.isPresent()) {
+//            task.get().setIsDeleted(true);
+//            taskRepository.save(task.get());
+//        }
     }
 
     @Override
-    public TaskDTO update(TaskDTO dto) {
-        Task task = taskRepository.getById(dto.getId());
+    public TaskDTO update(TaskDTO dto) throws TicketingProjectException {
+        Task task = taskRepository.findById(dto.getId()).orElseThrow(() -> new TicketingProjectException("Task does not exists"));
         Task converted = mapperUtil.convert(dto, new Task());
-        converted.setId(task.getId());
+ //       converted.setId(task.getId());
         //userDTO doesn't have id, and it uses username as a reference. I find user by username
 //        User user = userRepository.findByUserName(dto.getAssignedEmployee().getUserName());
 //        Project project = projectRepository.findByProjectCode(dto.getProject().getProjectCode());
 //        converted.setAssignedEmployee(user);
 //        converted.setProject(project);
-        converted.setAssignedDate(task.getAssignedDate());
-        converted.setTaskStatus(task.getTaskStatus());
+//        converted.setAssignedDate(task.getAssignedDate());
+//        converted.setTaskStatus(task.getTaskStatus());
         Task saved = taskRepository.save(converted);
         return mapperUtil.convert(saved, new TaskDTO());
     }
 
     @Override
-    public void updateTaskStatus(TaskDTO dto) {
-        Task task = taskRepository.getById(dto.getId());
-     //   Optional<Task> task1 = taskRepository.findById(dto.getId());
+    public TaskDTO updateTaskStatus(TaskDTO dto) throws TicketingProjectException {
+        Task task = taskRepository.findById(dto.getId()).orElseThrow(()-> new TicketingProjectException("Task does not exist"));
         task.setTaskStatus(dto.getTaskStatus());
-        taskRepository.save(task);
+        Task saved = taskRepository.save(task);
+        return mapperUtil.convert(saved, new TaskDTO());
     }
 
     @Override
@@ -116,9 +116,10 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskDTO> listAllTasksByStatusIsNot(Status status) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<Task> tasks = taskRepository.getNonCompleteTasks(username);
+    public List<TaskDTO> listAllTasksByStatusIsNot(Status status) throws TicketingProjectException {
+        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findById(Long.parseLong(id)).orElseThrow(() -> new TicketingProjectException("User does not exist"));
+        List<Task> tasks = taskRepository.getNonCompleteTasks(user.getUserName());
 
       //  List<Task> tasks = taskRepository.getNonCompleteTasks("a@b.c4");
      //   return tasks.stream().map(taskMapper::convertToDto).collect(Collectors.toList());

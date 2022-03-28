@@ -1,4 +1,4 @@
-package com.cydeo.mapper;
+package com.cydeo.util.archive;
 
 import com.cydeo.dto.RoleDTO;
 import com.cydeo.entity.Role;

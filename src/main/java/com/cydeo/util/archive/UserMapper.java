@@ -1,4 +1,4 @@
-package com.cydeo.mapper;
+package com.cydeo.util.archive;
 
 import com.cydeo.dto.UserDTO;
 import com.cydeo.entity.User;

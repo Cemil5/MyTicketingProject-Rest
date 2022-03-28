@@ -1,6 +1,6 @@
 package com.cydeo.entity;
 
-import com.cydeo.utils.Gender;
+import com.cydeo.enums.Gender;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
