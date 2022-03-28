@@ -3,6 +3,7 @@ package com.cydeo.controller;
 import com.cydeo.annotation.DefaultExceptionMessage;
 import com.cydeo.dto.ProjectDTO;
 import com.cydeo.entity.ResponseWrapper;
+import com.cydeo.exception.TicketingProjectException;
 import com.cydeo.service.ProjectService;
 import com.cydeo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,9 +40,61 @@ public class ProjectController {
         return ResponseEntity.ok(new ResponseWrapper("Projects are retrieved", list));
     }
 
+    @GetMapping("/{projectcode}")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
+    @Operation(summary = "Read by project code")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Manager')")
+    public ResponseEntity<ResponseWrapper> readByProjectCode(@PathVariable("projectcode") String projectCode){
+        ProjectDTO projectDTO = projectService.getByProjectCode(projectCode);
+        return ResponseEntity.ok(new ResponseWrapper("Project is retrieved", projectDTO));
+    }
 
+    // bug: not working
+    @PostMapping
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
+    @Operation(summary = "Create project")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Manager')")
+    public ResponseEntity<ResponseWrapper> createProject(@RequestBody ProjectDTO projectDTO) throws TicketingProjectException {
+        ProjectDTO dto = projectService.save(new ProjectDTO());
+        return ResponseEntity.ok(new ResponseWrapper("Project is retrieved", dto));
+    }
 
+    // bug: not working
+    @PutMapping
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
+    @Operation(summary = "Update project")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Manager')")
+    public ResponseEntity<ResponseWrapper> updateProject(@RequestBody ProjectDTO projectDTO) throws TicketingProjectException {
+        ProjectDTO dto = projectService.save(new ProjectDTO());
+        return ResponseEntity.ok(new ResponseWrapper("Project is updated", dto));
+    }
 
+    @DeleteMapping("/{projectcode}")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
+    @Operation(summary = "Delete project")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Manager')")
+    public ResponseEntity<ResponseWrapper> deleteProject(@PathVariable String projectcode) throws TicketingProjectException {
+        projectService.delete(projectcode);
+        return ResponseEntity.ok(new ResponseWrapper("Project is deleted"));
+    }
+
+    @PutMapping("/complete/{projectcode}")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
+    @Operation(summary = "Complete project")
+    @PreAuthorize("hasAuthority('Manager')")
+    public ResponseEntity<ResponseWrapper> completeProject(@PathVariable String projectcode) throws TicketingProjectException {
+        ProjectDTO dto = projectService.complete(projectcode);
+        return ResponseEntity.ok(new ResponseWrapper("Project is completed", dto));
+    }
+
+    @GetMapping("/details")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
+    @Operation(summary = "Read all projects with details")
+    @PreAuthorize("hasAnyAuthority('Manager')")
+    public ResponseEntity<ResponseWrapper> readAllByDetails() throws TicketingProjectException {
+        List<ProjectDTO> list = projectService.listAllProjectDetails();
+        return ResponseEntity.ok(new ResponseWrapper("Projects are retrieved with details", list));
+    }
 
 
    // from MVC work

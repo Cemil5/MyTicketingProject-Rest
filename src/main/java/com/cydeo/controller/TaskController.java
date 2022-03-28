@@ -1,25 +1,69 @@
 package com.cydeo.controller;
 
+import com.cydeo.annotation.DefaultExceptionMessage;
 import com.cydeo.dto.TaskDTO;
+import com.cydeo.entity.ResponseWrapper;
+import com.cydeo.exception.TicketingProjectException;
 import com.cydeo.service.ProjectService;
 import com.cydeo.service.TaskService;
 import com.cydeo.service.UserService;
 import com.cydeo.utils.Status;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+//@Controller
+@RestController
 @AllArgsConstructor
-@RequestMapping("/task")
+@RequestMapping("/api/v1/task")
+@Tag(name = "Task Controller", description = "Task API")
 public class TaskController {
 
+    ProjectService projectService;
+    UserService userService;
+    TaskService taskService;
+
+    @GetMapping
+    @Operation(summary = "Read all tasks")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, please try again!")
+    @PreAuthorize("hasAuthority('Manager')")
+    public ResponseEntity<ResponseWrapper> readAll(){
+        return ResponseEntity.ok(new ResponseWrapper("Successfully retrieved all tasks", taskService.findAll()));
+    }
+
+    @GetMapping("/project-manager")
+    @Operation(summary = "Read all tasks by project manager")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, please try again!")
+    @PreAuthorize("hasAuthority('Manager')")
+    public ResponseEntity<ResponseWrapper> readAllByManager() throws TicketingProjectException {
+        List<TaskDTO> taskList = taskService.listAllTasksByProjectManager();
+        return ResponseEntity.ok(new ResponseWrapper("Successfully retrieved all tasks by manager", taskList));
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Read task by id")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, please try again!")
+    @PreAuthorize("hasAnyAuthority('Manager', 'Employee')")
+    public ResponseEntity<ResponseWrapper> readById(@PathVariable Long id) throws TicketingProjectException {
+        TaskDTO dto = taskService.findById(id);
+        return ResponseEntity.ok(new ResponseWrapper("Successfully retrieved all tasks by manager", dto));
+    }
+
+
+
+
+
+
+
+    // from MVC:
+   /*
     ProjectService projectService;
     UserService userService;
     TaskService taskService;
@@ -92,5 +136,5 @@ public class TaskController {
         List<TaskDTO> tasks = taskService.listAllTasksByStatusIs(Status.COMPLETE);
         model.addAttribute("tasks", tasks);
         return "/task/archive";
-    }
+    }*/
 }

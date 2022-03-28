@@ -2,6 +2,7 @@ package com.cydeo.service;
 
 import com.cydeo.dto.ProjectDTO;
 import com.cydeo.dto.TaskDTO;
+import com.cydeo.exception.TicketingProjectException;
 import com.cydeo.utils.Status;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
 public interface TaskService {
 
     List<TaskDTO> findAll();
-    TaskDTO findById(Long id);
+    TaskDTO findById(Long id) throws TicketingProjectException;
     TaskDTO save(TaskDTO dto);
     void deleteById(Long id);
     TaskDTO update(TaskDTO dto);
@@ -25,4 +26,5 @@ public interface TaskService {
 
     void updateTaskStatus(TaskDTO dto);
 
+    List<TaskDTO> listAllTasksByProjectManager() throws TicketingProjectException;
 }
