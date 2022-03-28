@@ -59,11 +59,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO update(UserDTO dto) {
+    public UserDTO update(UserDTO dto) throws TicketingProjectException {
         User user = userRepository.findByUserName(dto.getUserName());
+        if(user==null){
+            throw new TicketingProjectException("This username does not exist!");
+        }
         User convertedUser = mapperUtil.convert(dto, new User());
         convertedUser.setId(user.getId());
-        convertedUser.setEnabled(true);
+        convertedUser.setEnabled(user.isEnabled());
         convertedUser.setPassWord(passwordEncoder.encode(dto.getPassWord()));
         userRepository.save(convertedUser);
         return findByUserName(dto.getUserName());
@@ -71,6 +74,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(String username) throws TicketingProjectException {
+        User user = userRepository.findByUserName(username);
+        if(user==null){
+            throw new TicketingProjectException("This username does not exist!");
+        }
       deleteByUsername(username);
     }
 

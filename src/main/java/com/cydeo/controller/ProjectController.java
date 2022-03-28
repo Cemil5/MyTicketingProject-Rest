@@ -1,19 +1,51 @@
 package com.cydeo.controller;
 
+import com.cydeo.annotation.DefaultExceptionMessage;
 import com.cydeo.dto.ProjectDTO;
+import com.cydeo.entity.ResponseWrapper;
 import com.cydeo.service.ProjectService;
 import com.cydeo.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
-@Controller
-@RequestMapping("/project")
+//@Controller
+@RestController
+@RequestMapping("/api/v1/project")
+@Tag(name = "Project Controller", description = "Project API")
 public class ProjectController {
+
+    private final ProjectService projectService;
+    private final UserService userService;
+
+    public ProjectController(ProjectService projectService, UserService userService) {
+        this.projectService = projectService;
+        this.userService = userService;
+    }
+
+    @GetMapping
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
+    @Operation(summary = "Read all projects")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Manager')")
+    public ResponseEntity<ResponseWrapper> readAll(){
+        List<ProjectDTO> list = projectService.listAllProjects();
+        return ResponseEntity.ok(new ResponseWrapper("Projects are retrieved", list));
+    }
+
+
+
+
+
+
+   // from MVC work
+/*
 
     private final ProjectService projectService;
     private final UserService userService;
@@ -77,6 +109,7 @@ public class ProjectController {
     }
 
 
+*/
 /*  // I put this method to manager package
     List<ProjectDTO> getCountedListOfProjectDTO(UserDTO manager){
         return projectService.findAll()
@@ -93,5 +126,7 @@ public class ProjectController {
                 }).collect(Collectors.toList());
     }
 */
+
+
 
 }
