@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
+import java.nio.file.AccessDeniedException;
+
 @Component
 public class UserDtoConverter implements Converter<String, UserDTO> {
 
@@ -14,7 +16,12 @@ public class UserDtoConverter implements Converter<String, UserDTO> {
 
     @Override
     public UserDTO convert(String source) {
-        return userService.findByUserName(source);
+        try {
+            return userService.findByUserName(source);
+        } catch (AccessDeniedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

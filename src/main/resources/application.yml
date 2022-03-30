@@ -46,8 +46,12 @@ springdoc:
     path: /swagger-ui.html
 
 
-# can be removed :
-  # application.properties, static & templates directories
-  # converter / templates
+# should be removed (I keep for reference) :
+  # application.properties : we use .yml
+  # AuthenticationController
+  # we need belows for UI part:
+    # static & templates directories
+    # converter / templates
+    # UserPrincipal
 
 

@@ -25,7 +25,7 @@ public class User extends BaseEntity {
     private String userName;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String passWord;
-    private boolean enabled;
+    private Boolean enabled;
     private String phone;
     private String email;
 

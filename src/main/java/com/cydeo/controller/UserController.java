@@ -19,6 +19,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 
@@ -43,18 +44,6 @@ public class UserController {
         this.roleService = roleService;
     }
 
-    @PostMapping("/create-user")
-    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
-    @Operation(summary = "Create new account")
-    @PreAuthorize("hasAuthority('Admin')")
-    public ResponseEntity<ResponseWrapper> doRegister(@RequestBody UserDTO userDTO) throws TicketingProjectException {
-
-        UserDTO createdUser = userService.save(userDTO);
-        sendEmail(createEmail(createdUser));
-
-        return ResponseEntity.ok(new ResponseWrapper("User has been created! \n Please confirm your email!", createdUser));
-    }
-
     @GetMapping
     @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
     @Operation(summary = "Read all user")
@@ -68,27 +57,9 @@ public class UserController {
     @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
     @Operation(summary = "Read one user by username")
     //@PreAuthorize("hasAuthority('Admin')")    // only admin should see all users, current user should see his/her profile
-    public ResponseEntity<ResponseWrapper> readByUsername(@PathVariable("username") String username){
+    public ResponseEntity<ResponseWrapper> readByUsername(@PathVariable("username") String username) throws AccessDeniedException {
         UserDTO dto = userService.findByUserName(username);
         return ResponseEntity.ok(new ResponseWrapper("Successfully retrieved the user", dto));
-    }
-
-    @PostMapping
-    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
-    @Operation(summary = "Update an user")
-    //@PreAuthorize("hasAuthority('Admin')")    // only admin should see all users, current user should see his/her profile
-    public ResponseEntity<ResponseWrapper> updateByUsername(@RequestBody UserDTO user) throws TicketingProjectException {
-        UserDTO dto = userService.update(user);
-        return ResponseEntity.ok(new ResponseWrapper("Successfully updated the user", dto));
-    }
-
-    @DeleteMapping("/{username}")
-    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
-    @Operation(summary = "Delete one user by username")
-    @PreAuthorize("hasAuthority('Admin')")
-    public ResponseEntity<ResponseWrapper> deleteUser(@PathVariable("username") String username) throws TicketingProjectException {
-        userService.deleteByUsername(username);
-        return ResponseEntity.ok(new ResponseWrapper("Successfully deleted"));
     }
 
     @GetMapping("/role")
@@ -98,6 +69,36 @@ public class UserController {
     public ResponseEntity<ResponseWrapper> readByRole(@RequestParam String role){
         List<UserDTO> list = userService.listAllByRole(role);
         return ResponseEntity.ok(new ResponseWrapper("Successfully read users by role", list));
+    }
+
+    @PostMapping("/create-user")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
+    @Operation(summary = "Create new account")
+    @PreAuthorize("hasAuthority('Admin')")
+    public ResponseEntity<ResponseWrapper> doRegister(@RequestBody UserDTO userDTO) throws TicketingProjectException {
+
+        UserDTO createdUser = userService.save(userDTO);
+        sendEmail(createEmail(createdUser));
+
+        return ResponseEntity.ok(new ResponseWrapper("User has been created! \n Please confirm your email!", createdUser));
+    }
+
+    @PostMapping
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
+    @Operation(summary = "Update an user")
+    //@PreAuthorize("hasAuthority('Admin')")    // only admin should see all users, current user should see his/her profile
+    public ResponseEntity<ResponseWrapper> updateByUsername(@RequestBody UserDTO user) throws TicketingProjectException, AccessDeniedException {
+        UserDTO dto = userService.update(user);
+        return ResponseEntity.ok(new ResponseWrapper("Successfully updated the user", dto));
+    }
+
+    @DeleteMapping("/{username}")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
+    @Operation(summary = "Delete one user by username")
+    @PreAuthorize("hasAuthority('Admin')")
+    public ResponseEntity<ResponseWrapper> deleteUser(@PathVariable("username") String username) throws TicketingProjectException, AccessDeniedException {
+        userService.deleteByUsername(username);
+        return ResponseEntity.ok(new ResponseWrapper("Successfully deleted"));
     }
 
 

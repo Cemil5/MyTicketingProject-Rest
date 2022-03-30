@@ -12,11 +12,17 @@ import com.cydeo.repository.UserRepository;
 import com.cydeo.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
+import java.security.AccessControlException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,8 +44,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO findByUserName(String username) {
+    public UserDTO findByUserName(String username) throws AccessDeniedException {
         User user = userRepository.findByUserName(username);
+        checkForAuthorities(user);
         return mapperUtil.convert(user, new UserDTO());
     }
 
@@ -59,14 +66,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO update(UserDTO dto) throws TicketingProjectException {
+    public UserDTO update(UserDTO dto) throws TicketingProjectException, AccessDeniedException {
         User user = userRepository.findByUserName(dto.getUserName());
+
+        checkForAuthorities(user);
         if(user==null){
             throw new TicketingProjectException("This username does not exist!");
         }
+        if (!user.getEnabled()){
+            throw new TicketingProjectException("User is not confirmed. Please, update after confirmation");
+        }
+
         User convertedUser = mapperUtil.convert(dto, new User());
         convertedUser.setId(user.getId());
-        convertedUser.setEnabled(user.isEnabled());
         convertedUser.setPassWord(passwordEncoder.encode(dto.getPassWord()));
         userRepository.save(convertedUser);
         return findByUserName(dto.getUserName());
@@ -91,7 +103,6 @@ public class UserServiceImpl implements UserService {
         if (!checkIfUserCanBeDeleted(user)) {
             throw new TicketingProjectException("User can not be deleted. It is linked by a project or task or only admin");
         }
-
         user.setUserName(user.getUserName()+ "-"+user.getId());
         user.setIsDeleted(true);
         userRepository.save(user);
@@ -125,5 +136,18 @@ public class UserServiceImpl implements UserService {
         user.setEnabled(true);
         User confirmedUser = userRepository.save(user);
         return mapperUtil.convert(confirmedUser, new UserDTO());
+    }
+
+    private void checkForAuthorities(User user) throws AccessDeniedException {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // !authentication.getName().equals("anonymousUser") : if you are not log in the system
+        if (authentication != null && !authentication.getName().equals("anonymousUser")){
+            Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+            // if logged user's id and user's id written in inputbox does not match:
+            if (!(authentication.getName().equals(user.getId().toString())) || roles.contains("Admin")){
+                throw new AccessDeniedException("Access is denied");
+            }
+        }
     }
 }
