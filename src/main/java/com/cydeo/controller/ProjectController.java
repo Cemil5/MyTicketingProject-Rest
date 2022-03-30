@@ -49,23 +49,21 @@ public class ProjectController {
         return ResponseEntity.ok(new ResponseWrapper("Project is retrieved", projectDTO));
     }
 
-    // bug: not working
     @PostMapping
     @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
     @Operation(summary = "Create project")
     @PreAuthorize("hasAnyAuthority('Admin', 'Manager')")
     public ResponseEntity<ResponseWrapper> createProject(@RequestBody ProjectDTO projectDTO) throws TicketingProjectException {
-        ProjectDTO dto = projectService.save(new ProjectDTO());
-        return ResponseEntity.ok(new ResponseWrapper("Project is retrieved", dto));
+        ProjectDTO dto = projectService.save(projectDTO);
+        return ResponseEntity.ok(new ResponseWrapper("Project is created", dto));
     }
 
-    // bug: not working
     @PutMapping
     @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
     @Operation(summary = "Update project")
     @PreAuthorize("hasAnyAuthority('Admin', 'Manager')")
     public ResponseEntity<ResponseWrapper> updateProject(@RequestBody ProjectDTO projectDTO) throws TicketingProjectException {
-        ProjectDTO dto = projectService.save(new ProjectDTO());
+        ProjectDTO dto = projectService.save(projectDTO);
         return ResponseEntity.ok(new ResponseWrapper("Project is updated", dto));
     }
 

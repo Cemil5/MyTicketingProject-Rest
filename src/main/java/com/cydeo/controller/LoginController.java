@@ -1,6 +1,7 @@
 package com.cydeo.controller;
 
 import com.cydeo.annotation.DefaultExceptionMessage;
+import com.cydeo.annotation.ExecutionTime;
 import com.cydeo.dto.UserDTO;
 import com.cydeo.entity.ConfirmationToken;
 import com.cydeo.entity.ResponseWrapper;
@@ -42,7 +43,9 @@ public class LoginController {
 	}
 
 	@PostMapping("/authenticate")
+	@Operation(summary = "Login to application")
 	@DefaultExceptionMessage(defaultMessage = "Bad Credentials")
+	@ExecutionTime
 	public ResponseEntity<ResponseWrapper> doLogin(@RequestBody AuthenticationRequest authenticationRequest) throws TicketingProjectException, AccessDeniedException {
 
 		String username = authenticationRequest.getUsername();

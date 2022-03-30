@@ -22,7 +22,7 @@ public class PerformanceAspect {
     private void anyExecutionTimeOperation(){}
 
     @Around("anyExecutionTimeOperation()")
-    public void anyExecutionTimeOperationAdvice(ProceedingJoinPoint proceedingJoinPoint){
+    public Object anyExecutionTimeOperationAdvice(ProceedingJoinPoint proceedingJoinPoint){
         long beforeTime = System.currentTimeMillis();
         Object result = null;
 
@@ -35,6 +35,7 @@ public class PerformanceAspect {
 
         logger.info("Time taken to execute :{} ms (Method :{} - Parameters :{})", (afterTime-beforeTime),
                 proceedingJoinPoint.getSignature().toShortString(), proceedingJoinPoint.getArgs());
+        return result;
     }
 
 

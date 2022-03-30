@@ -83,9 +83,9 @@ public class UserController {
         return ResponseEntity.ok(new ResponseWrapper("User has been created! \n Please confirm your email!", createdUser));
     }
 
-    @PostMapping
+    @PutMapping
     @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
-    @Operation(summary = "Update an user")
+    @Operation(summary = "Update user")
     //@PreAuthorize("hasAuthority('Admin')")    // only admin should see all users, current user should see his/her profile
     public ResponseEntity<ResponseWrapper> updateByUsername(@RequestBody UserDTO user) throws TicketingProjectException, AccessDeniedException {
         UserDTO dto = userService.update(user);
