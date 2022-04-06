@@ -1,0 +1,1 @@
+[INFO ] 2022-03-30 13:42:11.750 [http-nio-8080-exec-2] PerformanceAspect - Time taken to execute :158 ms (Method :LoginController.doLogin(..) - Parameters :[com.cydeo.entity.common.AuthenticationRequest@1ea5d284])
