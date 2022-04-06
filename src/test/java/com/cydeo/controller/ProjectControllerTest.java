@@ -50,8 +50,8 @@ class ProjectControllerTest {
                 .build();
 
         projectDTO = ProjectDTO.builder()
-                .projectCode("Api12")
-                .projectName("Api-ozzy")
+                .projectCode("Api0")
+                .projectName("Api-test")
                 .assignedManager(userDTO)
                 .startDate(LocalDate.now())
                 .endDate(LocalDate.now().plusDays(5))
@@ -91,6 +91,28 @@ class ProjectControllerTest {
                         .content(toJsonString(projectDTO)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.projectCode").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.assignedManager.userName").isNotEmpty());
+    }
+
+    @Test
+    public void givenToken_updateProject() throws Exception {
+        projectDTO.setId(15L);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/v1/project")
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(toJsonString(projectDTO)))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("message").value("Project is updated"));
+    }
+
+    @Test
+    public void givenToken_deleteProject() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/v1/project/" + projectDTO.getProjectCode())
+                        .header("Authorization", token))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("message").value("Project is deleted"));
     }
 
     protected String toJsonString(final Object obj){
