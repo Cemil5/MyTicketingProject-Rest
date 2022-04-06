@@ -8,7 +8,8 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TaskDtoConverter implements Converter<String, TaskDTO> {
+public class TaskDtoConverter implements Converter<String, TaskDTO>
+{
 
     @Autowired
     TaskService taskService;

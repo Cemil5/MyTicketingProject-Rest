@@ -9,7 +9,8 @@ import org.springframework.stereotype.Component;
 import java.nio.file.AccessDeniedException;
 
 @Component
-public class UserDtoConverter implements Converter<String, UserDTO> {
+public class UserDtoConverter implements Converter<String, UserDTO>
+{
 
     @Autowired
     UserService userService;

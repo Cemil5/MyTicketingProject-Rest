@@ -46,7 +46,7 @@ springdoc:
     path: /swagger-ui.html
 
 
-# should be removed (I keep for reference) :
+# should be removed all below (I keep for reference) :
   # application.properties : we use .yml
   # AuthenticationController
   # we need belows for UI part:
