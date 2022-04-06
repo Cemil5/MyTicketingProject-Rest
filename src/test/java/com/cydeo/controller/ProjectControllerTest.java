@@ -39,10 +39,10 @@ class ProjectControllerTest {
     @BeforeAll
     static void setUp(){
         userDTO = UserDTO.builder()
-                .id(2L)
-                .firstName("Mike")
-                .lastName("Smith")
-                .userName("ozzy@cydeo.com")
+                .id(25L)
+                .firstName("Tom1")
+                .lastName("Will11")
+                .userName("chrisw@cydeo.com")
                 .passWord("Abc1")
                 .confirmPassword("Abc1")
                 .role(new RoleDTO(2L, "Manager"))
@@ -50,7 +50,7 @@ class ProjectControllerTest {
                 .build();
 
         projectDTO = ProjectDTO.builder()
-                .projectCode("Api1")
+                .projectCode("Api12")
                 .projectName("Api-ozzy")
                 .assignedManager(userDTO)
                 .startDate(LocalDate.now())
@@ -64,8 +64,9 @@ class ProjectControllerTest {
 
     @Test
     public void givenNoToken_whenGetSecureRequest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/project/Api1"))
-                .andExpect(status().is4xxClientError());
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/v1/project/Api1"))
+                        .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -74,10 +75,12 @@ class ProjectControllerTest {
                         .get("/api/v1/project")
                         .header("Authorization", token)
                         .accept(MediaType.APPLICATION_JSON))
-              //  .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].projectCode").exists())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].projectCode").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].assignedManager.userName").isNotEmpty());
     }
 
+    // it writes to database
     @Test
     public void givenToken_createProjects() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
@@ -86,10 +89,8 @@ class ProjectControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(toJsonString(projectDTO)))
-                .andExpect(MockMvcResultMatchers.jsonPath("projectCode").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.projectCode").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.assignedManager.userName").isNotEmpty());
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.data.projectCode").isNotEmpty())
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.data.assignedManager.userName").isNotEmpty());
     }
 
     protected String toJsonString(final Object obj){
